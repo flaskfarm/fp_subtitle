@@ -33,6 +33,8 @@ P = create_plugin_instance(setting)
 try:
     from .mod_smi2srt import ModuleSmi2srt
     P.set_module_list([ModuleSmi2srt])
+    from .support_smi2srt import SupportSmi2srt
+    P.SupportSmi2srt = SupportSmi2srt
 except Exception as e:
     P.logger.error(f'Exception:{str(e)}')
     P.logger.error(traceback.format_exc())
