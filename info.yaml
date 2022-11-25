@@ -1,0 +1,7 @@
+title: "자막 툴"
+version: "1.0.0"
+package_name: "subtitle_tool"
+developer: "flaskfarm"
+description: "자막 관련 툴"
+home: "https://github.com/flaskfarm/subtitle_tool"
+more: "https://raw.githubusercontent.com/flaskfarm/subtitle_tool/main/README.md"

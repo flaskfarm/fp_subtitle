@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+
+{{ macros.m_button_group([['globalSettingSaveBtn', '설정 저장'], ['globalOneExecuteBtn', '1회 실행'], ['globalImmediatelyExecuteBtn', '즉시 실행']])}}
+{{ macros.m_row_start('5') }}
+{{ macros.m_row_end() }}
+<nav>
+{{ macros.m_tab_head_start() }}
+  {{ macros.m_tab_head('normal', '일반', true) }}
+  {{ macros.m_tab_head('auto', '자동', false) }}
+  {{ macros.m_tab_head('db', 'DB', false) }}
+{{ macros.m_tab_head_end() }}
+</nav>
+<form id='setting'>
+<div class="tab-content" id="nav-tabContent">
+{{ macros.m_tab_content_start('normal', true) }}
+  {{ macros.setting_input_text_and_buttons('smi2srt_work_path', '변환할 폴더',[['add_work_path_btn', '경로추가']], desc=['smi 파일을 탐색할 폴더입니다.', '2개 이상일 경우 구분자 ,'], value=arg['smi2srt_work_path']) }}
+  {{ macros.setting_checkbox('smi2srt_flag_remake', '재변환', value=arg['smi2srt_flag_remake'], desc=['On : 이미 srt 파일이 있는 경우에도 다시 변환합니다.']) }}
+  {{ macros.setting_checkbox('smi2srt_flag_remove_smi', '변환 후 smi 파일 삭제', value=arg['smi2srt_flag_remove_smi'], desc=['On : srt로 변환 성공 시 smi 파일을 삭제합니다.']) }}
+  {{ macros.setting_checkbox('smi2srt_flag_append_ko', 'ko 삽입', value=arg['smi2srt_flag_append_ko'], desc=['On : .smi 를 .ko.srt 로 변환합니다.']) }}
+  {{ macros.setting_checkbox('smi2srt_flag_change_ko_srt', '.srt => .ko.srt 변환', value=arg['smi2srt_flag_change_ko_srt'], desc=['On : 탐색시 .srt파일을 .ko.srt으로 변환합니다.']) }}
+  {{ macros.setting_checkbox('smi2srt_fail_file_move', '변환 실패시 파일 이동', value=arg['smi2srt_fail_file_move'], desc=['On : 실패된 파일을 지정된 폴더로 이동합니다.', 'Off : 실행시마다 변환 시도합니다.']) }}
+  <div id="fail_file_move_div" class="collapse">
+  {{ macros.setting_input_text('smi2srt_not_smi_move_path', 'NOT SMI 파일', desc=['SMI 포맷이 아닌 .smi 파일이 이동할 폴더입니다.'], value=arg['smi2srt_not_smi_move_path']) }}
+  {{ macros.setting_input_text('smi2srt_fail_move_path', '변환 실패한 파일', desc=['변환 실패시 .smi 파일이 이동할 폴더입니다.'], value=arg['smi2srt_fail_move_path']) }}
+  </div>
+  {{ macros.m_tab_content_end() }}
+
+  {{ macros.m_tab_content_start('auto', false) }}
+    {{ macros.global_setting_scheduler_button(arg['is_include'], arg['is_running']) }}
+    {{ macros.setting_input_text('smi2srt_interval', '스케쥴링 실행 정보', value=arg['smi2srt_interval'], col='3', desc=['Inverval(minute 단위)이나 Cron 설정']) }}
+    {{ macros.setting_checkbox('smi2srt_auto_start', '시작시 자동실행', value=arg['smi2srt_auto_start'], desc='On : 시작시 자동으로 스케쥴러에 등록됩니다.') }}
+  {{ macros.m_tab_content_end() }}
+
+  {{ macros.m_tab_content_start('db', false) }}
+    {{ macros.setting_input_text_and_buttons('smi2srt_db_delete_day', 'DB 삭제 기간', [['globalDbDeleteDayBtn', '기간 적용 삭제', [['tag_id','smi2srt_db_delete_day']]], ['globalDbDeleteBtn', '전체 삭제']], value=arg['smi2srt_db_delete_day'], col='6') }} 
+    {{ macros.setting_checkbox('smi2srt_db_auto_delete', 'DB 자동 삭제', value=arg['smi2srt_db_auto_delete'], desc=['On : 기간 적용하여 DB를 자동 삭제합니다.']) }}
+  {{ macros.m_tab_content_end() }} 
+</div>
+</form>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+  use_collapse("fail_file_move");
+});
+
+$('#fail_file_move').change(function() {
+  use_collapse('fail_file_move');
+});
+
+$("body").on('click', '#add_work_path_btn', function(e){ 
+  e.preventDefault();
+  globalSelectLocalFolder("경로 선택", '/', function(result) {
+    let prev_val = $('#smi2srt_work_path').val();
+    if (prev_val.length > 0) {
+        $('#smi2srt_work_path').val(prev_val + ',' + result)
+    } else {
+        $('#smi2srt_work_path').val(result);
+    }
+  });
+});
+
+
+</script>    
+{% endblock %}

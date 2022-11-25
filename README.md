@@ -1,1 +1,2 @@
-# fp_subtitle
+# 자막 툴
+  - smi2srt
