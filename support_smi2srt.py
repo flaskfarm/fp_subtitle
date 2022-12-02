@@ -120,6 +120,8 @@ class SupportSmi2srt(object):
                 try:
                     eachfile = os.path.join(work_path, item)
                     if os.path.isdir(eachfile):
+                        if item == 'Subs':
+                            continue
                         SupportSmi2srt.convert_directory(eachfile)
                     elif os.path.isfile(eachfile):
                         if eachfile[-4:].lower() == '.smi':
@@ -182,7 +184,11 @@ class SupportSmi2srt(object):
                                 logger.debug(".srt => .ko.srt : %s", eachfile)
                                 # 2020-06-15 한글이 들어있는 파일만.
                                 # 할 필요있나?..
-                                shutil.move(eachfile, eachfile.replace('.srt', '.ko.srt'))
+                                from support import SupportFile, SupportString
+                                if SupportString.is_include_hangul(SupportFile.read_file(eachfile)):
+                                    shutil.move(eachfile, eachfile.replace('.srt', '.ko.srt'))
+                                else:
+                                    logger.debug("한글 NO")
                 except Exception as e: 
                     logger.debug('Exception:%s', e)
                     logger.debug(traceback.format_exc())
