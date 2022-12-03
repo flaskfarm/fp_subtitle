@@ -185,9 +185,15 @@ class SupportSmi2srt(object):
                                 # 2020-06-15 한글이 들어있는 파일만.
                                 # 할 필요있나?..
                                 from support import SupportFile, SupportString
-                                if SupportString.is_include_hangul(SupportFile.read_file(eachfile)):
+                                text = SupportFile.read_file(eachfile)
+                                if SupportString.is_include_hangul(text):
                                     shutil.move(eachfile, eachfile.replace('.srt', '.ko.srt'))
                                 else:
+                                    tmp = SupportString.language_info(text)
+                                    logger.info(f"lang_info :{tmp}")
+
+                                    if tmp[1] > 50:
+                                        shutil.move(eachfile, eachfile.replace('.srt', '.en.srt'))
                                     logger.debug("한글 NO")
                 except Exception as e: 
                     logger.debug('Exception:%s', e)
