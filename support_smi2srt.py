@@ -208,6 +208,10 @@ class SupportSmi2srt(object):
         '''Predict a file's encoding using chardet'''
         try:
             #raise Exception
+            try:
+                import chardet
+            except:
+                os.system("pip install chardet")
             import chardet
 
             # Open the file as binary data
